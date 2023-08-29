@@ -1,9 +1,8 @@
 import java.util.Scanner;
 
-/* 11722 가장 긴 감소하는 부분 수열
-LIS 알고리즘!
-input : seq[N]
-- dp[N] : memorize 부분
+/* 11055 가장 큰 증가하는 부분 수열
+LIS 알고리즘
+dp
  */
 public class Main {
     static Integer[] seq, dp;
@@ -28,12 +27,12 @@ public class Main {
 
     static int LIS(int n) {
         if (dp[n] == null) {
-            dp[n] = 1;
+            dp[n] = 0;
             for (int i = n - 1; i >= 0; i--) {
-                if (seq[i] > seq[n]) {
-                    dp[n] = Math.max(dp[n], LIS(i) + 1);
-                }
+                if (seq[i] < seq[n])
+                    dp[n] = Math.max(dp[n], LIS(i));
             }
+            dp[n] += seq[n];
         }
         return dp[n];
     }
