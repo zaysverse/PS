@@ -1,56 +1,35 @@
 
-/* 11054 바이토닉 수열 : 증가 부분수열 + 감소 부분수열 로 이루어져있음
-LIS 알고리즘
-dp1, dp2 - 각각 증가([0]~[n-1]), 감소([n-1]~[0])하는 구간  부분수열의 길이를 구함
-Math.max(dp1[i]+dp2[i+1], 현재값)
+/* 1912 연속합
+input : seq[n]
+연속된 몇개의 수를 선택해서 구할 수 있는 최대합
  */
 
 import java.util.Scanner;
 
 public class Main {
-    static Integer[] seq, dpIncrease, dpDecrease;
-    static int N;
-
+    static Integer[] seq, dp;
+    static int max;
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        N = sc.nextInt();
+        int N = sc.nextInt();
         seq = new Integer[N];
-        dpIncrease = new Integer[N];
-        dpDecrease = new Integer[N];
-
-        // input
+        dp = new Integer[N];
         for (int i = 0; i < N; i++) {
             seq[i] = sc.nextInt();
         }
 
-        int result = 0;
-        for (int i = 0; i < N ; i++) {
-            result = Math.max(result, LIS(i) + LDS(i));
-        }
-        System.out.println(--result);       // dp[i]부분이 중복되었으므로 -1
+        dp[0] = seq[0];
+        max = seq[0];
+
+        recur(N - 1);
+        System.out.println(max);
     }
 
-    static int LIS(int n) {
-        if (dpIncrease[n] == null) {
-            dpIncrease[n] = 1;
-            for (int i = n - 1; i >= 0; i--) {
-                if (seq[i] < seq[n])
-                    dpIncrease[n] = Math.max(dpIncrease[n], LIS(i) + 1);
-            }
+    static int recur(int n) {
+        if (dp[n] == null) {
+            dp[n] = Math.max(seq[n], recur(n - 1) + seq[n]);
+            max = Math.max(dp[n], max);
         }
-        return dpIncrease[n];
+        return dp[n];
     }
-
-    static int LDS(int n) {
-        if (dpDecrease[n] == null) {
-            dpDecrease[n] = 1;
-            for (int i = n + 1; i <= N - 1; i++) {
-                if (seq[i] < seq[n])
-                    dpDecrease[n] = Math.max(dpDecrease[n], LDS(i) + 1);
-            }
-        }
-        return dpDecrease[n];
-    }
-
-
 }
