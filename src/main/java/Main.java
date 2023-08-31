@@ -1,44 +1,43 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
-/* 9461 파도반 수열
-[1] 1
-[2] 1
-[3] 1
-[4] 2 = 1 + 1 = [3] + [2]
-[5] 2 = 2 = [4]
-[6] 3 = 2 + 1 = [5] + [3]
-[7] 4 = 3 + 1 = [6] + [1]
-[8] 5 = 4 + 1 = [7] + [2]
-[9] 7 = 5 + 2 = [8] + [4]
-[10] 9 = 7 + 2 = [9] + [
-[11] 12 = 9 + 3 = [10] + [6]
-[12] 16 = 12 + 4 = [11] + [7]
-[13] 21 = 16 + 5 = [12] + [8]
-[14] 21 = [13]
-[15] 28 = [14] + [9]
-즉, 점화식은
-- dp[i] = dp[i-2] + dp[i-3]
+/* 11052 카드 구매하기
+4 = 4 / 1,3 / 2, 2
+p[1]을 i-1개 구입
+p[2] i-2개 구입
+
+dp[n] : n개의 카드를 구매하는 최대가격 값
+dp[n] = Max { dp[n-i] +p[i] } // (n-i)의 카드를 구매하는 최대값 + 카드i개가 담긴 값 중 Max!
  */
 
 public class Main {
-    static Long[] dp;
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int T = sc.nextInt();
-        dp = new Long[101];
-        dp[0] = 0L;
-        dp[1] = dp[2] = dp[3] = 1L;
-        for (int test_case = 0; test_case < T; test_case++) {
-            int N = sc.nextInt();
-            System.out.println(recur(N));
-        }
-    }
+        Scanner scanner = new Scanner(System.in);
 
-    static Long recur(int n) {
-        if (dp[n] == null) {
-            dp[n] = recur(n - 2) + recur(n - 3);
+        int N = scanner.nextInt();
+        int[] P = new int[N + 1];
+
+        for (int i = 1; i <= N; i++) {
+            P[i] = scanner.nextInt();
         }
-        return dp[n];
+
+        int[] dp = new int[N + 1];
+
+        dp[1] = P[1];
+
+        for (int i = 2; i <= N; i++) {
+            dp[i] = P[i];
+
+            for (int j = 0; j <= i / 2; j++) {
+                dp[i] = Math.max(dp[i], dp[i - j] + dp[j]);
+            }
+        }
+
+        System.out.println(dp[N]);
     }
 }
