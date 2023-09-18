@@ -1,64 +1,74 @@
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 
+/*
+bfs()알고리즘 - 1(익은 토마토) 부터 시작
+ */
 
-public class Main {
-    static int[][] arr;
-    static boolean[] visited;
-    static int node,line,start;
-    static Queue<Integer> queue = new LinkedList<>();
-    static StringBuilder sb = new StringBuilder();
+class Main {
+    static int[][] map;
+    static Queue<int[]> queue = new LinkedList<>();
+    static int M, N;
+    static int[] dx = {-1, 1, 0, 0};
+    static int[] dy = {0, 0, -1, 1};
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        node = Integer.parseInt(st.nextToken());   // 정점의 개수
-        line = Integer.parseInt(st.nextToken());   // 간선의 개수
-        start = Integer.parseInt(st.nextToken());   // 탐색을 시작할 정점의 번호
+        M = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(st.nextToken());
+        map = new int[N][M];
+        List<int[]> list = new ArrayList<>();
 
-        arr = new int[node + 1][node + 1];
-        visited = new boolean[node + 1];
-
-        for (int i = 0; i < line; i++) {
-            StringTokenizer str = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(str.nextToken());
-            int b = Integer.parseInt(str.nextToken());
-            arr[a][b] = arr[b][a] =  1;
-        }
-
-        dfs(start);
-        sb.append("\n");
-        visited = new boolean[node + 1];
-        bfs(start);
-        System.out.println(sb);
-
-    }
-
-    static void dfs(int start) {
-        visited[start] = true;
-        sb.append(start).append(" ");
-
-        for (int i = 0; i <= node; i++) {
-            if (arr[start][i] == 1 && !visited[i]) {
-                dfs(i);
+        // 토마토 정보 초기화
+        for (int i = 0; i < N; i++) {
+            st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < M; j++) {
+                map[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-    }
 
-    static void bfs(int start) {
-        queue.add(start);
-        visited[start] = true;
-        while (!queue.isEmpty()) {
-            start = queue.poll();
-            sb.append(start).append(" ");
 
-            for (int i = 0; i <= node; i++) {
-                if (arr[start][i] == 1 && !visited[i]) {
-                    queue.add(i);
-                    visited[i]=true;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M; j++) {
+                if (map[i][j] == 1)
+                    queue.add(new int[]{i, j});
+            }
+        }
+
+        bfs();
+
+        int max = 0;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M; j++) {
+                if (map[i][j] == 0) {
+                    System.out.println("-1");
+                    return;
                 }
+                max = Math.max(map[i][j], max);
+            }
+        }
+        System.out.println(max - 1);
+
+
+    }
+
+    static void bfs() {
+        while (!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            int X = cur[0];
+            int Y = cur[1];
+            for (int i = 0; i < 4; i++) {
+                int nextX = X + dx[i];
+                int nextY = Y + dy[i];
+                if (nextX < 0 || nextY < 0 || nextX >= N || nextY >= M) continue;
+                if (map[nextX][nextY] != 0) continue; // 익지 않은 토마일경우에만 로직 실행
+                queue.offer(new int[]{nextX, nextY});
+                map[nextX][nextY] = map[X][Y] + 1;
             }
         }
     }
+
+
 }
