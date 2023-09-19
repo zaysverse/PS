@@ -17,7 +17,7 @@ class Main {
             arr = new int[node + 1][node + 1];
             color = new int[node + 1];
             result = false;
-
+            
             for (int i = 0; i < line; i++) {
                 st = new StringTokenizer(br.readLine());
                 int u = Integer.parseInt(st.nextToken());
