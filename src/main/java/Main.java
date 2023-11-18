@@ -6,11 +6,6 @@ import java.util.*;
 
 class Main {
 
-    static int[][] farm;
-    static boolean[][] isVisited;
-    static int[] dx = {0, 1, 0, -1};
-    static int[] dy = {1, 0, -1, 0};
-    static int count, M, N, K;
 
     public static void main(String[] args) throws IOException {
 
@@ -18,49 +13,52 @@ class Main {
         int T = sc.nextInt();
 
         for (int test_case = 0; test_case < T; test_case++) {
-            M = sc.nextInt();
-            N = sc.nextInt();
-            K = sc.nextInt();
 
-            farm = new int[M][N];
-            isVisited = new boolean[M][N];
-            for (int i = 0; i < M; i++) {
-                Arrays.fill(isVisited[i], false);
+        }
+
+    }
+
+    class Solution {
+        public int[] solution(int[] answers) {
+            int[] answer = {};
+            int max = 0;
+
+            int one = 1, one_score = 0;
+            for (int i = 0; i < answers.length; i++) {
+                if (answers[i] == one++) one_score++;
+                if (one == 5) one = 1;
             }
 
-            for (int i = 0; i < K; i++) {
-                farm[sc.nextInt()][sc.nextInt()] = 1;
-            }
-
-            count = 0;
-            for (int i = 0; i < M; i++) {
-                for (int j = 0; j < N; j++) {
-                    if (farm[i][j] == 1 & !isVisited[i][j]) {
-                        dfs(i, j);
-                        count++;
+            int two = 1, two_score = 0;
+            for (int i = 0; i < answers.length; i++) {
+                if (answers[i] % 2 == 0) {
+                    if (answers[i] == 2) two_score++;
+                } else {
+                    if (answers[i] == two) {
+                        two_score++;
+                        if (two == 1) two = 3;
+                        if (two == 5) two = 1;
+                        else two++;
                     }
                 }
             }
 
-            System.out.println(count);
-        }
-
-    }
-
-    static void dfs(int x, int y) {
-        isVisited[x][y] = true;
-
-        for (int i = 0; i < 4; i++) {
-            int nX = x + dx[i];
-            int nY = y + dy[i];
-
-            if (nX < 0 || nX >= M || nY < 0 || nY >= N) continue;
-            if (farm[nX][nY] == 1 && !isVisited[nX][nY]) {
-                dfs(nX, nY);
+            int three = 3, three_score=0;
+            for (int i = 0; i < answers.length; i+=2) {
+                if(answers[i]== three) three_score++;
+                if(answers[i+1]==three) three_score++;
+                if(three==5) three=3;
+                else if ( three == 3) three = 1;
+                else three++;
             }
+
+            max = Math.max(one_score, Math.max(two_score, three_score));
+
+
+
+            return answer;
         }
     }
-
 }
 
 
